@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ceas Animat Singularitas</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #0d0d0d;
+            overflow: hidden; /* Previne apariția barelor de scroll */
+        }
+
+        .clock-container {
+            position: relative;
+            /* Se adaptează automat: va ocupa 90% din lățimea sau înălțimea ecranului (oricare e mai mică) */
+            width: 90vh;  
+            height: 90vh;
+            max-width: 90vw;
+            max-height: 90vw;
+            
+            background: url('ceas-fundal.png') no-repeat center center;
+            background-size: contain;
+        }
+
+        /* Stilurile generale pentru limbi - grosimi ajustate pentru dimensiune mare */
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom center;
+            background-color: #dfba73; 
+            border-radius: 6px;
+            transform: translateX(-50%) rotate(0deg);
+            box-shadow: -3px 6px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Limba pentru ORĂ */
+        .hour-hand {
+            width: 0.9vh; /* Grosime dinamică */
+            height: 25%; 
+            z-index: 3;
+        }
+
+        /* Limba pentru MINUT */
+        .minute-hand {
+            width: 0.6vh; /* Grosime dinamică */
+            height: 35%; 
+            z-index: 4;
+        }
+
+        /* Limba pentru SECUNDĂ (Pas cu pas) */
+        .second-hand {
+            width: 0.3vh; /* Grosime dinamică */
+            height: 39%;
+            background-color: #dfba90;
+            z-index: 5;
+            transition: transform 0.12s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+
+        /* Elementul central mărit proporțional */
+        .center-nut {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2.5vh;
+            height: 2.5vh;
+            background-color: #dfba99;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.6);
+        }
+        
+        
+        /* colyright*/
+        
+                .metadata-footer {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: rgba(223, 186, 115, 0.6); /* Culoare aurie discretă, cu opacitate */
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            line-height: 1.6;
+            z-index: 100;
+            pointer-events: none; /* Textul nu blochează click-urile pe ecran */
+        }
+
+        
+        
+    </style>
+</head>
+<body>
+
+     <div class="metadata-footer">
+        <div>&copy; 2026 Singularitas</div>
+        <div>+40744 388 248</div>
+    </div>
+    
+    
+    <div class="clock-container">
+        <div class="hand hour-hand" id="hour"></div>
+        <div class="hand minute-hand" id="minute"></div>
+        <div class="hand second-hand" id="second"></div>
+        <div class="center-nut"></div>
+    </div>
+
+    <script>
+        const hourHand = document.getElementById('hour');
+        const minuteHand = document.getElementById('minute');
+        const secondHand = document.getElementById('second');
+
+        function updateClock() {
+            const now = new Date();
+            const seconds = now.getSeconds();
+            const minutes = now.getMinutes();
+            const hours = now.getHours();
+
+            const secondsDegrees = (seconds / 60) * 360;
+            const minutesDegrees = ((minutes / 60) * 360) + ((seconds / 60) * 6);
+            const hoursDegrees = ((hours % 12) / 12 * 360) + ((minutes / 60) * 30);
+
+            if (seconds === 0) {
+                secondHand.style.transition = 'none';
+            } else {
+                secondHand.style.transition = 'transform 0.12s cubic-bezier(0.8, 0, 0.2, 1)';
+            }
+
+            secondHand.style.transform = `translateX(-50%) rotate(${secondsDegrees}deg)`;
+            minuteHand.style.transform = `translateX(-50%) rotate(${minutesDegrees}deg)`;
+            hourHand.style.transform = `translateX(-50%) rotate(${hoursDegrees}deg)`;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
